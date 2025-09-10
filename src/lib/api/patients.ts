@@ -73,8 +73,8 @@ export async function createPatient(
 
 export async function updatePatient(
   id: string,
-  updates: Partial<PatientBase>
-): Promise<ApiResponse<PatientBase>> {
+  updates: Partial<Patient>
+): Promise<ApiResponse<Patient>> {
   try {
     await new Promise((resolve) => setTimeout(resolve, 500));
 
@@ -83,17 +83,12 @@ export async function updatePatient(
       createdAt: new Date().toISOString(),
       name: "",
       description: "",
+      updatedAt: new Date().toISOString(),
+      isDeleted: false,
       ...updates,
     };
 
-    const result = PatientBaseSchema.safeParse(updatedPatientData);
-    if (!result.success) {
-      return {
-        error: `Invalid patient data: ${result.error.message}`,
-      };
-    }
-
-    return { data: result.data };
+    return { data: updatedPatientData as Patient };
   } catch (error) {
     return {
       error:

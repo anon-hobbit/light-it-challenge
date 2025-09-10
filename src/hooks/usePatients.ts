@@ -51,7 +51,7 @@ export function usePatients() {
     onSuccess: (result, variables) => {
       if (result.data) {
         queryClient.setQueryData<Patient[]>(PATIENTS_QUERY_KEY, (old) =>
-          old?.map(p => p.id === variables.id ? { ...p, ...result.data } : p) || []
+          old?.map(p => p.id === variables.id ? result.data! : p) || []
         );
       }
     },
