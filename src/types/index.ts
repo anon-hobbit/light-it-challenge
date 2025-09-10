@@ -18,4 +18,7 @@ export const PatientSchema = PatientBaseSchema.extend({
 });
 
 export type PatientBase = z.infer<typeof PatientBaseSchema>;
-export type Patient = z.infer<typeof PatientSchema>;
+export type Patient = z.infer<typeof PatientSchema> & {
+  updatedAt: string;
+  isDeleted: boolean;
+}
