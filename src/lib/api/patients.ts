@@ -82,9 +82,7 @@ export async function updatePatient(
       id,
       createdAt: new Date().toISOString(),
       name: "",
-      avatar: null,
       description: "",
-      website: "",
       ...updates,
     };
 

@@ -4,9 +4,11 @@ export const PatientBaseSchema = z.object({
   id: z.string().min(1, 'ID is required'),
   createdAt: z.string().pipe(z.coerce.date({ message: 'Invalid date format' })).transform(val => val.toISOString()),
   name: z.string().min(1, 'Name is required').max(255, 'Name too long'),
-  avatar: z.string().refine(val => /^https?:\/\/.+/.test(val), { message: 'Invalid avatar URL' }).nullable(),
+  // Los links estan todos rotos 😢
+  // avatar: z.string().refine(val => /^https?:\/\/.+/.test(val), { message: 'Invalid avatar URL' }).nullable(),
   description: z.string().min(1, 'Description is required'),
-  website: z.string().refine(val => /^https?:\/\/.+/.test(val), { message: 'Invalid website URL' }),
+  // No tiene sentido usarla en la ui
+  // website: z.string().refine(val => /^https?:\/\/.+/.test(val), { message: 'Invalid website URL' }),
 });
 
 export const PatientSchema = PatientBaseSchema.extend({
