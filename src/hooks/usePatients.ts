@@ -1,0 +1,94 @@
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { fetchPatients, createPatient, updatePatient, deletePatient } from '../lib/api/patients';
+import type { Patient, PatientBase } from '../types';
+
+const PATIENTS_QUERY_KEY = ['patients'];
+
+export function usePatients() {
+  const queryClient = useQueryClient();
+
+  const {
+    data: patients,
+    isLoading,
+    error,
+    refetch
+  } = useQuery({
+    queryKey: PATIENTS_QUERY_KEY,
+    queryFn: async () => {
+      const result = await fetchPatients();
+      if (result.error) {
+        throw new Error(result.error);
+      }
+      return result.data?.map(p => ({
+        ...p,
+        bloodType: undefined,
+        birthDate: undefined,
+        insuranceNumber: undefined,
+        phone: undefined,
+        email: undefined,
+      })) as Patient[];
+    },
+  });
+
+  const createMutation = useMutation({
+    mutationFn: createPatient,
+    onSuccess: (result) => {
+      if (result.data) {
+        queryClient.setQueryData<Patient[]>(PATIENTS_QUERY_KEY, (old) => [
+          ...(old || []),
+          result.data as Patient
+        ]);
+      }
+    },
+    onError: (error) => {
+      console.error('Failed to create patient:', error);
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Partial<PatientBase> }) => 
+      updatePatient(id, data),
+    onSuccess: (result, variables) => {
+      if (result.data) {
+        queryClient.setQueryData<Patient[]>(PATIENTS_QUERY_KEY, (old) =>
+          old?.map(p => p.id === variables.id ? { ...p, ...result.data } : p) || []
+        );
+      }
+    },
+    onError: (error) => {
+      console.error('Failed to update patient:', error);
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deletePatient,
+    onSuccess: (result, patientId) => {
+      if (result.data) {
+        queryClient.setQueryData<Patient[]>(PATIENTS_QUERY_KEY, (old) =>
+          old?.filter(p => p.id !== patientId) || []
+        );
+      }
+    },
+    onError: (error) => {
+      console.error('Failed to delete patient:', error);
+    },
+  });
+
+  return {
+    patients: patients || [],
+    isLoading,
+    error,
+    
+    // Actions
+    refetch,
+    createPatient: createMutation.mutateAsync,
+    updatePatient: (id: string, data: Partial<PatientBase>) => 
+      updateMutation.mutateAsync({ id, data }),
+    deletePatient: deleteMutation.mutateAsync,
+    
+    // Mutaciones
+    isCreating: createMutation.isPending,
+    isUpdating: updateMutation.isPending,
+    isDeleting: deleteMutation.isPending,
+  };
+}

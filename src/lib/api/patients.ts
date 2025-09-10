@@ -44,7 +44,7 @@ export async function fetchPatients(): Promise<ApiResponse<PatientBase[]>> {
 // Uso zod para validar los datos
 // Aplico un delay de 500ms para simular una operacion real
 export async function createPatient(
-  patient: Omit<Patient, "id">
+  patient: Omit<Patient, "id" | "createdAt">
 ): Promise<ApiResponse<Patient>> {
   try {
     await new Promise((resolve) => setTimeout(resolve, 500));
