@@ -48,7 +48,7 @@ export function PatientCard({
       </p>
 
       {/* Actions */}
-      <div className="flex justify-end space-x-2 mt-4 pt-4 border-t">
+      <div className="flex justify-end space-x-2 mt-4 pt-4 border-t border-gray-200">
         {onView && (
           <Button
             variant="outline"
