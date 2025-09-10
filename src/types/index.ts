@@ -1,5 +1,16 @@
 import { z } from 'zod';
 
+export enum BloodType {
+  A_POSITIVE = 'A+',
+  A_NEGATIVE = 'A-',
+  B_POSITIVE = 'B+',
+  B_NEGATIVE = 'B-',
+  AB_POSITIVE = 'AB+',
+  AB_NEGATIVE = 'AB-',
+  O_POSITIVE = 'O+',
+  O_NEGATIVE = 'O-',
+}
+
 export const PatientBaseSchema = z.object({
   id: z.string().min(1, 'ID is required'),
   createdAt: z.string().pipe(z.coerce.date({ message: 'Invalid date format' })).transform(val => val.toISOString()),
@@ -18,6 +29,11 @@ export const PatientSchema = PatientBaseSchema.extend({
   phone: z.string().refine(val => /^\+?[\d\s\-()]+$/.test(val), { message: 'Invalid phone number format' }).optional(),
   email: z.string().refine(val => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val), { message: 'Invalid email format' }).optional(),
 });
+
+export interface SelectOption {
+  value: string;
+  label: string;
+}
 
 export type PatientBase = z.infer<typeof PatientBaseSchema>;
 export type Patient = z.infer<typeof PatientSchema> & {
