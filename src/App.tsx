@@ -1,13 +1,19 @@
 import "./App.css";
 import { QueryProvider } from "./providers/query-provider";
+import { DrawerProvider } from "./providers/drawer-provider";
 import { usePatients } from "./hooks/usePatients";
+import { useDrawer } from "./hooks/useDrawer";
 import { PatientGrid } from "./components/PatientGrid";
+import { PatientDetailView } from "./components/PatientDetailView";
+import { CreatePatient } from "./components/CreatePatient";
 import { Button } from "./components/ui";
+import { AppDrawerContainer } from "./components/AppDrawerContainer";
 import type { Patient } from "./types";
 
 function AppContent() {
   const { patients, isLoading, error, deletePatient, isDeleting } =
     usePatients();
+  const { openDrawer } = useDrawer();
 
   const handleEdit = (patient: Patient) => {
     console.log("Edit patient:", patient);
@@ -15,8 +21,10 @@ function AppContent() {
   };
 
   const handleView = (patient: Patient) => {
-    console.log("View patient:", patient);
-    // TODO: abrir drawer
+    openDrawer(<PatientDetailView patient={patient} />, {
+      title: `Patient Details - ${patient.name}`,
+      size: "lg",
+    });
   };
 
   const handleDelete = async (patientId: string) => {
@@ -31,8 +39,13 @@ function AppContent() {
   };
 
   const handleAddPatient = () => {
-    console.log("Add new patient");
-    // TODO: abrir drawer
+    openDrawer(
+      <CreatePatient />,
+      { 
+        title: "Add New Patient",
+        size: 'lg'
+      }
+    );
   };
 
   if (isLoading) {
@@ -75,7 +88,7 @@ function AppContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="h-full w-full bg-gray-50">
       <div className="max-w-7xl mx-auto p-6">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
@@ -108,7 +121,10 @@ function AppContent() {
 function App() {
   return (
     <QueryProvider>
-      <AppContent />
+      <DrawerProvider>
+        <AppContent />
+        <AppDrawerContainer />
+      </DrawerProvider>
     </QueryProvider>
   );
 }
