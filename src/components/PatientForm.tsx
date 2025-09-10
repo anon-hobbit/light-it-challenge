@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Select } from './ui';
+import { Button, Select, InputText, InputDate, Textarea } from './ui';
 import { PatientSchema, BloodType } from '../types';
 import type { Patient } from '../types';
 import type { SelectOption } from './ui/Select';
@@ -129,39 +129,26 @@ export function PatientForm({
       <div>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h3>
         <div className="space-y-4">
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-              Name *
-            </label>
-            <input
-              type="text"
-              id="name"
-              value={formData.name}
-              onChange={(e) => handleChange('name', e.target.value)}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                errors.name ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="Enter patient name"
-            />
-            {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
-          </div>
+          <InputText
+            id="name"
+            label="Name"
+            value={formData.name}
+            onChange={(value) => handleChange('name', value)}
+            placeholder="Enter patient name"
+            error={errors.name}
+            required
+          />
 
-          <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-              Description *
-            </label>
-            <textarea
-              id="description"
-              value={formData.description}
-              onChange={(e) => handleChange('description', e.target.value)}
-              rows={3}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                errors.description ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="Enter patient description"
-            />
-            {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description}</p>}
-          </div>
+          <Textarea
+            id="description"
+            label="Description"
+            value={formData.description}
+            onChange={(value) => handleChange('description', value)}
+            placeholder="Enter patient description"
+            error={errors.description}
+            required
+            rows={3}
+          />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -179,21 +166,13 @@ export function PatientForm({
               {errors.bloodType && <p className="mt-1 text-sm text-red-600">{errors.bloodType}</p>}
             </div>
 
-            <div>
-              <label htmlFor="birthDate" className="block text-sm font-medium text-gray-700 mb-1">
-                Birth Date
-              </label>
-              <input
-                type="date"
-                id="birthDate"
-                value={formData.birthDate}
-                onChange={(e) => handleChange('birthDate', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.birthDate ? 'border-red-500' : 'border-gray-300'
-                }`}
-              />
-              {errors.birthDate && <p className="mt-1 text-sm text-red-600">{errors.birthDate}</p>}
-            </div>
+            <InputDate
+              id="birthDate"
+              label="Birth Date"
+              value={formData.birthDate}
+              onChange={(value) => handleChange('birthDate', value)}
+              error={errors.birthDate}
+            />
           </div>
         </div>
       </div>
@@ -203,57 +182,35 @@ export function PatientForm({
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                Phone
-              </label>
-              <input
-                type="tel"
-                id="phone"
-                value={formData.phone}
-                onChange={(e) => handleChange('phone', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.phone ? 'border-red-500' : 'border-gray-300'
-                }`}
-                placeholder="+1 (555) 123-4567"
-              />
-              {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone}</p>}
-            </div>
-
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                value={formData.email}
-                onChange={(e) => handleChange('email', e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.email ? 'border-red-500' : 'border-gray-300'
-                }`}
-                placeholder="patient@example.com"
-              />
-              {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="insuranceNumber" className="block text-sm font-medium text-gray-700 mb-1">
-              Insurance Number
-            </label>
-            <input
-              type="text"
-              id="insuranceNumber"
-              value={formData.insuranceNumber}
-              onChange={(e) => handleChange('insuranceNumber', e.target.value)}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                errors.insuranceNumber ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="Insurance number"
+            <InputText
+              id="phone"
+              label="Phone"
+              type="tel"
+              value={formData.phone}
+              onChange={(value) => handleChange('phone', value)}
+              placeholder="+1 (555) 123-4567"
+              error={errors.phone}
             />
-            {errors.insuranceNumber && <p className="mt-1 text-sm text-red-600">{errors.insuranceNumber}</p>}
+
+            <InputText
+              id="email"
+              label="Email"
+              type="email"
+              value={formData.email}
+              onChange={(value) => handleChange('email', value)}
+              placeholder="patient@example.com"
+              error={errors.email}
+            />
           </div>
+
+          <InputText
+            id="insuranceNumber"
+            label="Insurance Number"
+            value={formData.insuranceNumber}
+            onChange={(value) => handleChange('insuranceNumber', value)}
+            placeholder="Insurance number"
+            error={errors.insuranceNumber}
+          />
         </div>
       </div>
 
