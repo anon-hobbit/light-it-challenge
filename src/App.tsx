@@ -3,13 +3,13 @@ import { QueryProvider } from "./providers/query-provider";
 import { DrawerProvider } from "./providers/drawer-provider";
 import { usePatients } from "./hooks/usePatients";
 import { useDrawer } from "./hooks/useDrawer";
-import { PatientGrid } from "./components/PatientGrid";
 import { PatientDetailView } from "./components/PatientDetailView";
 import { CreatePatient } from "./components/CreatePatient";
 import { EditPatient } from "./components/EditPatient";
 import { Button } from "./components/ui";
 import { AppDrawerContainer } from "./components/AppDrawerContainer";
 import type { Patient } from "./types";
+import { PaginatedPatientGrid } from "./components/PaginatedPatientGrid";
 
 function AppContent() {
   const { patients, isLoading, error, deletePatient, isDeleting } =
@@ -42,13 +42,10 @@ function AppContent() {
   };
 
   const handleAddPatient = () => {
-    openDrawer(
-      <CreatePatient />,
-      { 
-        title: "Add New Patient",
-        size: 'lg'
-      }
-    );
+    openDrawer(<CreatePatient />, {
+      title: "Add New Patient",
+      size: "lg",
+    });
   };
 
   if (isLoading) {
@@ -109,7 +106,7 @@ function AppContent() {
         </div>
 
         {/* Patient Grid */}
-        <PatientGrid
+        <PaginatedPatientGrid
           patients={patients}
           onView={handleView}
           onEdit={handleEdit}
