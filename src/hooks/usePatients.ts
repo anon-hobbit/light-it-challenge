@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchPatients, createPatient, updatePatient, deletePatient } from '../lib/api/patients';
-import type { Patient, PatientBase } from '../types';
+import type { Patient } from '../types';
 
 const PATIENTS_QUERY_KEY = ['patients'];
 
@@ -46,7 +46,7 @@ export function usePatients() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<PatientBase> }) => 
+    mutationFn: ({ id, data }: { id: string; data: Partial<Patient> }) => 
       updatePatient(id, data),
     onSuccess: (result, variables) => {
       if (result.data) {
@@ -82,8 +82,11 @@ export function usePatients() {
     // Actions
     refetch,
     createPatient: createMutation.mutateAsync,
-    updatePatient: (id: string, data: Partial<PatientBase>) => 
-      updateMutation.mutateAsync({ id, data }),
+    updatePatient: (id: string, data: Partial<Patient>) => 
+      updateMutation.mutateAsync({ 
+        id, 
+        data: { ...data, updatedAt: new Date().toISOString() } 
+      }),
     deletePatient: deleteMutation.mutateAsync,
     
     // Mutaciones

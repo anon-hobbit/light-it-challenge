@@ -6,6 +6,7 @@ import { useDrawer } from "./hooks/useDrawer";
 import { PatientGrid } from "./components/PatientGrid";
 import { PatientDetailView } from "./components/PatientDetailView";
 import { CreatePatient } from "./components/CreatePatient";
+import { EditPatient } from "./components/EditPatient";
 import { Button } from "./components/ui";
 import { AppDrawerContainer } from "./components/AppDrawerContainer";
 import type { Patient } from "./types";
@@ -16,8 +17,10 @@ function AppContent() {
   const { openDrawer } = useDrawer();
 
   const handleEdit = (patient: Patient) => {
-    console.log("Edit patient:", patient);
-    // TODO: abrir drawer
+    openDrawer(<EditPatient patient={patient} />, {
+      title: `Edit Patient - ${patient.name}`,
+      size: "lg",
+    });
   };
 
   const handleView = (patient: Patient) => {
