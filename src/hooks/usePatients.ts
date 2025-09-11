@@ -1,8 +1,13 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { fetchPatients, createPatient, updatePatient, deletePatient } from '../lib/api/patients';
-import type { Patient } from '../types';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  fetchPatients,
+  createPatient,
+  updatePatient,
+  deletePatient,
+} from "../lib/api/patients";
+import type { Patient } from "../types";
 
-const PATIENTS_QUERY_KEY = ['patients'];
+const PATIENTS_QUERY_KEY = ["patients"];
 
 export function usePatients() {
   const queryClient = useQueryClient();
@@ -11,7 +16,7 @@ export function usePatients() {
     data: patients,
     isLoading,
     error,
-    refetch
+    refetch,
   } = useQuery({
     queryKey: PATIENTS_QUERY_KEY,
     queryFn: async () => {
@@ -19,14 +24,21 @@ export function usePatients() {
       if (result.error) {
         throw new Error(result.error);
       }
-      return result.data?.map(p => ({
-        ...p,
-        bloodType: undefined,
-        birthDate: undefined,
-        insuranceNumber: undefined,
-        phone: undefined,
-        email: undefined,
-      })) as Patient[];
+      return (
+        result.data?.map((p) => ({
+          ...p,
+          bloodType: undefined,
+          birthDate: undefined,
+          insuranceNumber: undefined,
+          phone: undefined,
+          email: undefined,
+        })) as Patient[]
+      ).sort((a, b) => {
+        const dateToCheckA = new Date(a.updatedAt || a.createdAt);
+        const dateToCheckB = new Date(b.updatedAt || b.createdAt);
+
+        return dateToCheckB.getTime() - dateToCheckA.getTime();
+      });
     },
   });
 
@@ -36,27 +48,29 @@ export function usePatients() {
       if (result.data) {
         queryClient.setQueryData<Patient[]>(PATIENTS_QUERY_KEY, (old) => [
           ...(old || []),
-          result.data as Patient
+          result.data as Patient,
         ]);
       }
     },
     onError: (error) => {
-      console.error('Failed to create patient:', error);
+      console.error("Failed to create patient:", error);
     },
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<Patient> }) => 
+    mutationFn: ({ id, data }: { id: string; data: Partial<Patient> }) =>
       updatePatient(id, data),
     onSuccess: (result, variables) => {
       if (result.data) {
-        queryClient.setQueryData<Patient[]>(PATIENTS_QUERY_KEY, (old) =>
-          old?.map(p => p.id === variables.id ? result.data! : p) || []
+        queryClient.setQueryData<Patient[]>(
+          PATIENTS_QUERY_KEY,
+          (old) =>
+            old?.map((p) => (p.id === variables.id ? result.data! : p)) || []
         );
       }
     },
     onError: (error) => {
-      console.error('Failed to update patient:', error);
+      console.error("Failed to update patient:", error);
     },
   });
 
@@ -64,13 +78,14 @@ export function usePatients() {
     mutationFn: deletePatient,
     onSuccess: (result, patientId) => {
       if (result.data) {
-        queryClient.setQueryData<Patient[]>(PATIENTS_QUERY_KEY, (old) =>
-          old?.filter(p => p.id !== patientId) || []
+        queryClient.setQueryData<Patient[]>(
+          PATIENTS_QUERY_KEY,
+          (old) => old?.filter((p) => p.id !== patientId) || []
         );
       }
     },
     onError: (error) => {
-      console.error('Failed to delete patient:', error);
+      console.error("Failed to delete patient:", error);
     },
   });
 
@@ -78,17 +93,17 @@ export function usePatients() {
     patients: patients || [],
     isLoading,
     error,
-    
+
     // Actions
     refetch,
     createPatient: createMutation.mutateAsync,
-    updatePatient: (id: string, data: Partial<Patient>) => 
-      updateMutation.mutateAsync({ 
-        id, 
-        data: { ...data, updatedAt: new Date().toISOString() } 
+    updatePatient: (id: string, data: Partial<Patient>) =>
+      updateMutation.mutateAsync({
+        id,
+        data: { ...data, updatedAt: new Date().toISOString() },
       }),
     deletePatient: deleteMutation.mutateAsync,
-    
+
     // Mutaciones
     isCreating: createMutation.isPending,
     isUpdating: updateMutation.isPending,
