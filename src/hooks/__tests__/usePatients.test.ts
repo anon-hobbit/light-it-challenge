@@ -16,6 +16,7 @@ const mockPatients: Patient[] = [
     description: 'Test patient',
     createdAt: '2024-01-01T00:00:00.000Z',
     updatedAt: '2024-01-15T00:00:00.000Z',
+    isDeleted: false,
     bloodType: 'A+',
     birthDate: '1990-01-01',
     insuranceNumber: '12345',
@@ -27,12 +28,13 @@ const mockPatients: Patient[] = [
     name: 'Jane Smith',
     description: 'Another patient',
     createdAt: '2024-01-02T00:00:00.000Z',
-    updatedAt: null,
-    bloodType: null,
-    birthDate: null,
-    insuranceNumber: null,
-    phone: null,
-    email: null
+    updatedAt: '2024-01-01T00:00:00.000Z',
+    isDeleted: false,
+    bloodType: undefined,
+    birthDate: undefined,
+    insuranceNumber: undefined,
+    phone: undefined,
+    email: undefined
   }
 ]
 
@@ -61,7 +63,7 @@ describe('usePatients', () => {
     const mockedFetchPatients = vi.mocked(patientsApi.fetchPatients)
     mockedFetchPatients.mockResolvedValue({
       data: mockPatients,
-      error: null
+      error: undefined
     })
 
     const wrapper = createWrapper()
@@ -83,7 +85,7 @@ describe('usePatients', () => {
   it('handles fetch error correctly', async () => {
     const mockedFetchPatients = vi.mocked(patientsApi.fetchPatients)
     mockedFetchPatients.mockResolvedValue({
-      data: null,
+      data: undefined,
       error: 'Failed to fetch patients'
     })
 
@@ -104,13 +106,13 @@ describe('usePatients', () => {
     
     mockedFetchPatients.mockResolvedValue({
       data: [],
-      error: null
+      error: undefined
     })
 
     const newPatient = mockPatients[0]
     mockedCreatePatient.mockResolvedValue({
       data: newPatient,
-      error: null
+      error: undefined
     })
 
     const wrapper = createWrapper()
@@ -141,13 +143,13 @@ describe('usePatients', () => {
     
     mockedFetchPatients.mockResolvedValue({
       data: [mockPatients[0]],
-      error: null
+      error: undefined
     })
 
     const updatedPatient = { ...mockPatients[0], name: 'Updated Name' }
     mockedUpdatePatient.mockResolvedValue({
       data: updatedPatient,
-      error: null
+      error: undefined
     })
 
     const wrapper = createWrapper()

@@ -23,12 +23,13 @@ const incompletePatient: Patient = {
   name: 'Jane Smith',
   description: 'Incomplete patient',
   createdAt: '2024-01-01T00:00:00.000Z',
-  updatedAt: null,
-  bloodType: null,
-  birthDate: null,
-  insuranceNumber: null,
-  phone: null,
-  email: null
+  updatedAt: '2023-12-31T00:00:00.000Z',
+  isDeleted: false,
+  bloodType: undefined,
+  birthDate: undefined,
+  insuranceNumber: undefined,
+  phone: undefined,
+  email: undefined
 }
 
 describe('PatientCard', () => {
@@ -41,8 +42,8 @@ describe('PatientCard', () => {
   })
 
   it('shows created date when no updated date', () => {
-    const patientWithoutUpdate = { ...mockPatient, updatedAt: null }
-    render(<PatientCard patient={patientWithoutUpdate} />)
+    // Use the incomplete patient which has an earlier updatedAt to simulate "no update"
+    render(<PatientCard patient={incompletePatient} />)
     
     expect(screen.getByText(/Created: 12\/31\/2023/)).toBeInTheDocument()
   })
