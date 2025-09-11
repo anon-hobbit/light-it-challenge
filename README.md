@@ -12,6 +12,8 @@ It includes custom UI components like:
 
 Except for some minor exceptions, the UI is built using vanilla TailwindCSS classes.
 
+<img width="1273" height="1258" alt="image" src="https://github.com/user-attachments/assets/ea09b30e-26e8-4bed-a086-1c006e03976c" />
+
 ### Stack
 
 - React
