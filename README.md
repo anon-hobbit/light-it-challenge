@@ -1,69 +1,63 @@
-# React + TypeScript + Vite
+# Light-IT Frontend Challenge "Patient Data Management"
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## By Anonymous Hobbit
+This is a simple patient data management application. It allows you to add, edit, and delete patients. The data comes from [MockAPI](https://mockapi.io/).
 
-Currently, two official plugins are available:
+It includes custom UI components like:
+- Button
+- Input (Text, Date, Textarea)
+- Select
+- Modal
+- Drawer
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Except for some minor exceptions, the UI is built using vanilla TailwindCSS classes.
 
-## Expanding the ESLint configuration
+### Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- React
+- TypeScript
+- Vite
+- TailwindCSS
+- React Query (TanStack)
+- Zod
+- Lucide React (Lucide Icons)
+- Class Variance Authority (CVA)
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Test stack
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+- Vitest
+- @testing-library/jest-dom
+- @testing-library/react
+- @testing-library/user-event
+- @vitest/coverage-v8
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Linting and formatting
+
+- ESLint
+- Prettier
+- TypeScript ESLint
+- React Hooks ESLint
+- React Refresh ESLint
+- React DOM ESLint
+
+## How to run the project
+
+First, install dependencies:
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Then, run the development server:
+```bash
+npm run dev
+```
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+To build the project for production, run:
+```bash
+npm run build
+```
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+To run the tests, run:
+```bash
+npm run test
 ```
