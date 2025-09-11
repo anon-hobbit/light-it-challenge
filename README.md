@@ -1,9 +1,11 @@
 # Light-IT Frontend Challenge "Patient Data Management"
 
 ## By Anonymous Hobbit
+
 This is a simple patient data management application. It allows you to add, edit, and delete patients. The data comes from [MockAPI](https://mockapi.io/).
 
 It includes custom UI components like:
+
 - Button
 - Input (Text, Date, Textarea)
 - Select
@@ -11,6 +13,13 @@ It includes custom UI components like:
 - Drawer
 
 Except for some minor exceptions, the UI is built using vanilla TailwindCSS classes.
+
+## Things to improve (self-review)
+
+- More test coverage
+- Error boundaries for sensitive componets
+- Better arch (maybe DDD?) for scaling
+- Patient manager is an overkill, should be handlded with React Query directly?
 
 <img width="1273" height="1258" alt="image" src="https://github.com/user-attachments/assets/ea09b30e-26e8-4bed-a086-1c006e03976c" />
 
@@ -45,21 +54,25 @@ Except for some minor exceptions, the UI is built using vanilla TailwindCSS clas
 ## How to run the project
 
 First, install dependencies:
+
 ```bash
 npm install
 ```
 
 Then, run the development server:
+
 ```bash
 npm run dev
 ```
 
 To build the project for production, run:
+
 ```bash
 npm run build
 ```
 
 To run the tests, run:
+
 ```bash
 npm run test
 ```
