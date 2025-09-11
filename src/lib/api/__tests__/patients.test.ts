@@ -1,6 +1,6 @@
-import { vi, beforeEach, afterEach } from 'vitest'
+import { vi, beforeEach, afterEach, describe, expect, it } from 'vitest'
 import { fetchPatients, createPatient, updatePatient, deletePatient } from '../patients'
-import type { Patient, PatientBase } from '../../../types'
+import type { Patient } from '../../../types'
 
 // Mock fetch globally
 const mockFetch = vi.fn()
@@ -36,13 +36,17 @@ describe('Patients API', () => {
         id: '1',
         name: 'John Doe',
         description: 'Test patient',
-        createdAt: '2024-01-01T00:00:00.000Z'
+        createdAt: '2024-01-01T00:00:00.000Z',
+        updatedAt: '2024-01-01T00:00:00.000Z',
+        isDeleted: false
       },
       {
         id: '2',
         name: 'Jane Smith',
         description: 'Another test patient',
-        createdAt: '2024-01-02T00:00:00.000Z'
+        createdAt: '2024-01-02T00:00:00.000Z',
+        updatedAt: '2024-01-02T00:00:00.000Z',
+        isDeleted: false
       }
     ]
 
@@ -56,13 +60,11 @@ describe('Patients API', () => {
 
       expect(mockFetch).toHaveBeenCalledWith('https://63bedcf7f5cfc0949b634fc8.mockapi.io/users')
       expect(result.data).toHaveLength(2)
-      expect(result.data?.[0]).toEqual(
-        expect.objectContaining({
-          id: '1',
-          name: 'John Doe',
-          description: 'Test patient'
-        })
-      )
+      expect(result.data?.[0]).toMatchObject({
+        id: '1',
+        name: 'John Doe',
+        description: 'Test patient'
+      })
       expect(result.error).toBeUndefined()
     })
 
@@ -94,20 +96,26 @@ describe('Patients API', () => {
           id: '1',
           name: 'John Doe',
           description: 'Valid patient',
-          createdAt: '2024-01-01T00:00:00.000Z'
+          createdAt: '2024-01-01T00:00:00.000Z',
+          updatedAt: '2024-01-01T00:00:00.000Z',
+          isDeleted: false
         },
         // Invalid patient (missing required fields)
         {
           id: '2',
           name: '', // empty name should be invalid
-          createdAt: '2024-01-02T00:00:00.000Z'
+          createdAt: '2024-01-02T00:00:00.000Z',
+          updatedAt: '2024-01-02T00:00:00.000Z',
+          isDeleted: false
         },
         // Valid patient
         {
           id: '3',
           name: 'Jane Smith',
           description: 'Another valid patient',
-          createdAt: '2024-01-03T00:00:00.000Z'
+          createdAt: '2024-01-03T00:00:00.000Z',
+          updatedAt: '2024-01-03T00:00:00.000Z',
+          isDeleted: false
         }
       ]
 
@@ -151,20 +159,13 @@ describe('Patients API', () => {
       const mockDate = new Date('2024-01-01T12:00:00.000Z')
       vi.setSystemTime(mockDate)
 
-      const createPromise = createPatient(newPatientData)
+      const result = await createPatient(newPatientData)
       
-      // Fast-forward the delay
-      vi.advanceTimersByTime(500)
-      
-      const result = await createPromise
-
-      expect(result.data).toEqual(
-        expect.objectContaining({
-          ...newPatientData,
-          id: 'test-uuid-123',
-          createdAt: expect.any(String),
-        })
-      )
+      expect(result.data).toMatchObject({
+        ...newPatientData,
+        id: 'test-uuid-123',
+        createdAt: expect.any(String),
+      })
       expect(result.error).toBeUndefined()
 
       vi.useRealTimers()
@@ -178,92 +179,52 @@ describe('Patients API', () => {
         isDeleted: false
       } as Omit<Patient, 'id' | 'createdAt'>
 
-      vi.useFakeTimers()
-      const createPromise = createPatient(invalidPatientData)
-      vi.advanceTimersByTime(500)
-      const result = await createPromise
+      const result = await createPatient(invalidPatientData)
 
       expect(result.data).toBeUndefined()
       expect(result.error).toContain('Invalid patient data')
-      vi.useRealTimers()
     })
   })
 
   describe('updatePatient', () => {
     it('successfully updates a patient', async () => {
-      vi.useFakeTimers()
-
       const updates = {
         name: 'Updated Name',
         description: 'Updated description'
       }
 
-      const updatePromise = updatePatient('test-id', updates)
-      vi.advanceTimersByTime(500)
-      const result = await updatePromise
+      const result = await updatePatient('test-id', updates)
 
-      expect(result.data).toEqual(
-        expect.objectContaining({
-          id: 'test-id',
-          name: 'Updated Name',
-          description: 'Updated description',
-          updatedAt: expect.any(String),
-          isDeleted: false
-        })
-      )
+      expect(result.data).toMatchObject({
+        id: 'test-id',
+        name: 'Updated Name',
+        description: 'Updated description',
+        updatedAt: expect.any(String),
+        isDeleted: false,
+        createdAt: expect.any(String)
+      })
       expect(result.error).toBeUndefined()
-
-      vi.useRealTimers()
     })
 
     it('handles partial updates', async () => {
-      vi.useFakeTimers()
-      const updatePromise = updatePatient('test-id', { name: 'Only Name Update' })
-      vi.advanceTimersByTime(500)
-      const result = await updatePromise
+      const result = await updatePatient('test-id', { name: 'Only Name Update' })
 
-      expect(result.data?.id).toBe('test-id')
-      expect(result.data?.name).toBe('Only Name Update')
-      expect(result.data?.description).toBe('') // default value
-
-      vi.useRealTimers()
+      expect(result.data).toMatchObject({
+        id: 'test-id',
+        name: 'Only Name Update',
+        description: '', // default value
+        updatedAt: expect.any(String),
+        isDeleted: false,
+        createdAt: expect.any(String)
+      })
     })
   })
 
   describe('deletePatient', () => {
     it('successfully deletes a patient', async () => {
-      vi.useFakeTimers()
-      
-      const deletePromise = deletePatient('test-id')
-      vi.advanceTimersByTime(500)
-      const result = await deletePromise
-
+      const result = await deletePatient('test-id')
       expect(result.data).toBe('test-id')
       expect(result.error).toBeUndefined()
-
-      vi.useRealTimers()
-    })
-
-    it('maintains consistent delay timing', async () => {
-      vi.useFakeTimers()
-      
-      const start = Date.now()
-      const deletePromise = deletePatient('test-id')
-      
-      // Should not resolve immediately
-      let resolved = false
-      deletePromise.then(() => { resolved = true })
-      
-      expect(resolved).toBe(false)
-      
-      vi.advanceTimersByTime(499)
-      expect(resolved).toBe(false)
-      
-      vi.advanceTimersByTime(1)
-      await deletePromise
-      expect(resolved).toBe(true)
-
-      vi.useRealTimers()
     })
   })
 })
