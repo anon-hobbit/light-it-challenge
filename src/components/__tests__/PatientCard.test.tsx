@@ -10,6 +10,7 @@ const mockPatient: Patient = {
   description: 'Test patient description',
   createdAt: '2024-01-01T00:00:00.000Z',
   updatedAt: '2024-01-15T00:00:00.000Z',
+  isDeleted: false,
   bloodType: 'A+',
   birthDate: '1990-01-01',
   insuranceNumber: '12345',
