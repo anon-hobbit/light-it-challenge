@@ -1,15 +1,17 @@
+import { useState } from "react";
 import { usePatients } from "../hooks/usePatients";
 import { useDrawer } from "../hooks/useDrawer";
 import { PatientDetailView } from "./PatientDetailView";
 import { CreatePatient } from "./CreatePatient";
 import { EditPatient } from "./EditPatient";
-import { Button } from "./ui";
+import { Button, ConfirmModal } from "./ui";
 import { PaginatedPatientGrid } from "./PaginatedPatientGrid";
 import type { Patient } from "../types";
 
 export function PatientManager() {
   const { patients, isLoading, error, deletePatient, isDeleting } = usePatients();
   const { openDrawer } = useDrawer();
+  const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; patientId?: string; patientName?: string }>({ isOpen: false });
 
   const handleEdit = (patient: Patient) => {
     openDrawer(<EditPatient patient={patient} />, {
@@ -26,10 +28,15 @@ export function PatientManager() {
   };
 
   const handleDelete = async (patientId: string) => {
-    // TODO: modal custom aca
-    if (confirm("Are you sure you want to delete this patient?")) {
+    const patient = patients.find(p => p.id === patientId);
+    setDeleteModal({ isOpen: true, patientId, patientName: patient?.name });
+  };
+
+  const handleConfirmDelete = async () => {
+    if (deleteModal.patientId) {
       try {
-        await deletePatient(patientId);
+        await deletePatient(deleteModal.patientId);
+        setDeleteModal({ isOpen: false });
       } catch (error) {
         console.error("Failed to delete patient:", error);
       }
@@ -110,6 +117,17 @@ export function PatientManager() {
             isDeleting={isDeleting}
           />
         </div>
+
+        <ConfirmModal
+          isOpen={deleteModal.isOpen}
+          onClose={() => setDeleteModal({ isOpen: false })}
+          onConfirm={handleConfirmDelete}
+          title="Delete Patient"
+          message={`Are you sure you want to delete ${deleteModal.patientName}? This action cannot be undone.`}
+          confirmText="Delete"
+          confirmVariant="danger"
+          isLoading={isDeleting}
+        />
       </div>
     </div>
   );

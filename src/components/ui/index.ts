@@ -6,3 +6,4 @@ export * from "./InputText.tsx";
 export * from "./InputDate.tsx";
 export * from "./Textarea.tsx";
 export * from "./Pagination.tsx";
+export * from "./Modal.tsx";
