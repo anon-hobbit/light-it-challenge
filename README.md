@@ -21,7 +21,8 @@ Except for some minor exceptions, the UI is built using vanilla TailwindCSS clas
 - Better arch (maybe DDD?) for scaling
 - Patient manager is an overkill, should be handlded with React Query directly?
 
-<img width="1273" height="1258" alt="image" src="https://github.com/user-attachments/assets/ea09b30e-26e8-4bed-a086-1c006e03976c" />
+<img width="1276" height="1039" alt="image" src="https://github.com/user-attachments/assets/5bfb26e8-61a3-4f84-a379-551da9ea61da" />
+
 
 ### Stack
 
