@@ -30,6 +30,7 @@ export const PatientSchema = PatientBaseSchema.extend({
   insuranceNumber: z.string().min(1, 'Insurance number cannot be empty').optional(),
   phone: z.string().refine(val => /^\+?[\d\s\-()]+$/.test(val), { message: 'Invalid phone number format' }).optional(),
   email: z.string().refine(val => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val), { message: 'Invalid email format' }).optional(),
+  isDeleted: z.boolean().default(false),
 });
 
 export interface SelectOption {
@@ -39,6 +40,6 @@ export interface SelectOption {
 
 export type PatientBase = z.infer<typeof PatientBaseSchema>;
 export type Patient = z.infer<typeof PatientSchema> & {
-  updatedAt: string;
+  updatedAt?: string;
   isDeleted: boolean;
 }
