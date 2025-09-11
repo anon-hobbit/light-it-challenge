@@ -1,3 +1,4 @@
+import { useMemo, memo } from "react";
 import { Button, Avatar } from "./ui";
 import type { Patient } from "../types";
 import { AlertCircle, CheckCircle, Eye, Pencil, Trash } from "lucide-react";
@@ -10,15 +11,18 @@ interface PatientCardProps {
   isDeleting?: boolean;
 }
 
-export function PatientCard({
+export const PatientCard = memo(function PatientCard({
   patient,
   onView,
   onEdit,
   onDelete,
   isDeleting,
 }: PatientCardProps) {
-  const isCompleted = Object.values(patient).every(
-    (value) => value !== null && value !== undefined
+  const isCompleted = useMemo(
+    () => Object.values(patient).every(
+      (value) => value !== null && value !== undefined
+    ),
+    [patient]
   );
 
   return (
@@ -91,4 +95,4 @@ export function PatientCard({
       </div>
     </div>
   );
-}
+});

@@ -5,9 +5,8 @@ import {
   updatePatient,
   deletePatient,
 } from "../lib/api/patients";
+import { queryKeys, queryKeyHelpers } from "../lib/query-keys";
 import type { Patient } from "../types";
-
-const PATIENTS_QUERY_KEY = ["patients"];
 
 export function usePatients() {
   const queryClient = useQueryClient();
@@ -18,27 +17,13 @@ export function usePatients() {
     error,
     refetch,
   } = useQuery({
-    queryKey: PATIENTS_QUERY_KEY,
+    queryKey: queryKeys.patients.lists(),
     queryFn: async () => {
       const result = await fetchPatients();
       if (result.error) {
         throw new Error(result.error);
       }
-      return (
-        result.data?.map((p) => ({
-          ...p,
-          bloodType: undefined,
-          birthDate: undefined,
-          insuranceNumber: undefined,
-          phone: undefined,
-          email: undefined,
-        })) as Patient[]
-      ).sort((a, b) => {
-        const dateToCheckA = new Date(a.updatedAt || a.createdAt);
-        const dateToCheckB = new Date(b.updatedAt || b.createdAt);
-
-        return dateToCheckB.getTime() - dateToCheckA.getTime();
-      });
+      return result.data || [];
     },
   });
 
@@ -46,10 +31,11 @@ export function usePatients() {
     mutationFn: createPatient,
     onSuccess: (result) => {
       if (result.data) {
-        queryClient.setQueryData<Patient[]>(PATIENTS_QUERY_KEY, (old) => [
-          ...(old || []),
-          result.data as Patient,
-        ]);
+        // Add new patient to the list cache
+        queryClient.setQueryData<Patient[]>(
+          queryKeys.patients.lists(),
+          (old) => [...(old || []), result.data as Patient]
+        );
       }
     },
     onError: (error) => {
@@ -62,10 +48,17 @@ export function usePatients() {
       updatePatient(id, data),
     onSuccess: (result, variables) => {
       if (result.data) {
+        // Update patient in list cache
         queryClient.setQueryData<Patient[]>(
-          PATIENTS_QUERY_KEY,
+          queryKeys.patients.lists(),
           (old) =>
             old?.map((p) => (p.id === variables.id ? result.data! : p)) || []
+        );
+
+        // Update individual patient cache if it exists
+        queryClient.setQueryData(
+          queryKeys.patients.detail(variables.id),
+          result.data
         );
       }
     },
@@ -78,10 +71,14 @@ export function usePatients() {
     mutationFn: deletePatient,
     onSuccess: (result, patientId) => {
       if (result.data) {
+        // Remove patient from list cache
         queryClient.setQueryData<Patient[]>(
-          PATIENTS_QUERY_KEY,
+          queryKeys.patients.lists(),
           (old) => old?.filter((p) => p.id !== patientId) || []
         );
+
+        // Remove individual patient cache
+        queryKeyHelpers.removePatient(queryClient, patientId);
       }
     },
     onError: (error) => {

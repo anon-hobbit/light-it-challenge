@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { usePatients } from "../hooks/usePatients";
 import { useDrawer } from "../hooks/useDrawer";
 import { PatientDetailView } from "./PatientDetailView";
@@ -13,24 +13,33 @@ export function PatientManager() {
   const { openDrawer } = useDrawer();
   const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; patientId?: string; patientName?: string }>({ isOpen: false });
 
-  const handleEdit = (patient: Patient) => {
+  const sortedPatients = useMemo(() => {
+    return patients?.sort((a, b) => {
+      const dateToCheckA = new Date(a.updatedAt || a.createdAt);
+      const dateToCheckB = new Date(b.updatedAt || b.createdAt);
+
+      return dateToCheckB.getTime() - dateToCheckA.getTime();
+    });
+  }, [patients]);
+
+  const handleEdit = useCallback((patient: Patient) => {
     openDrawer(<EditPatient patient={patient} />, {
       title: `Edit Patient - ${patient.name}`,
       size: "lg",
     });
-  };
+  }, [openDrawer]);
 
-  const handleView = (patient: Patient) => {
+  const handleView = useCallback((patient: Patient) => {
     openDrawer(<PatientDetailView patient={patient} />, {
       title: `Patient Details - ${patient.name}`,
       size: "lg",
     });
-  };
+  }, [openDrawer]);
 
-  const handleDelete = async (patientId: string) => {
-    const patient = patients.find(p => p.id === patientId);
+  const handleDelete = useCallback((patientId: string) => {
+    const patient = sortedPatients.find(p => p.id === patientId);
     setDeleteModal({ isOpen: true, patientId, patientName: patient?.name });
-  };
+  }, [sortedPatients]);
 
   const handleConfirmDelete = async () => {
     if (deleteModal.patientId) {
@@ -43,12 +52,12 @@ export function PatientManager() {
     }
   };
 
-  const handleAddPatient = () => {
+  const handleAddPatient = useCallback(() => {
     openDrawer(<CreatePatient />, {
       title: "Add New Patient",
       size: "lg",
     });
-  };
+  }, [openDrawer]);
 
   if (isLoading) {
     return (
@@ -110,7 +119,7 @@ export function PatientManager() {
         {/* Patient Grid */}
         <div className="flex-1">
           <PaginatedPatientGrid
-            patients={patients}
+            patients={sortedPatients}
             onView={handleView}
             onEdit={handleEdit}
             onDelete={handleDelete}

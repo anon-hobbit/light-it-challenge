@@ -1,4 +1,4 @@
-import { PatientBaseSchema, type Patient, type PatientBase } from "../../types";
+import { PatientBaseSchema, type Patient } from "../../types";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL!;
 
@@ -7,7 +7,7 @@ export interface ApiResponse<T> {
   error?: string;
 }
 
-export async function fetchPatients(): Promise<ApiResponse<PatientBase[]>> {
+export async function fetchPatients(): Promise<ApiResponse<Patient[]>> {
   try {
     const response = await fetch(`${API_BASE_URL}/users`);
 
@@ -28,7 +28,7 @@ export async function fetchPatients(): Promise<ApiResponse<PatientBase[]>> {
         }
         return result.data;
       })
-      .filter(Boolean) as PatientBase[];
+      .filter(Boolean) as Patient[];
 
     return { data: validatedPatients };
   } catch (error) {
