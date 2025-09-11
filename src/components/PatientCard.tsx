@@ -1,7 +1,7 @@
-import { useMemo, memo } from "react";
+import { memo } from "react";
 import { Button, Avatar } from "./ui";
 import type { Patient } from "../types";
-import { AlertCircle, CheckCircle, Eye, Pencil, Trash } from "lucide-react";
+import { Eye, Pencil, Trash } from "lucide-react";
 
 interface PatientCardProps {
   patient: Patient;
@@ -18,25 +18,8 @@ export const PatientCard = memo(function PatientCard({
   onDelete,
   isDeleting,
 }: PatientCardProps) {
-  const isCompleted = useMemo(
-    () => Object.values(patient).every(
-      (value) => value !== null && value !== undefined
-    ),
-    [patient]
-  );
-
   return (
-    <div className="relative bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow p-4 flex flex-col">
-      <div
-        className={`flex items-center gap-1 absolute top-1 right-1 text-xs leading-0 p-1 rounded-3xl text-white ${isCompleted ? "bg-green-400" : "bg-red-400"}`}
-      >
-        {isCompleted ? (
-          <CheckCircle className="w-2.5 h-2.5" />
-        ) : (
-          <AlertCircle className="w-2.5 h-2.5" />
-        )}
-        <span>{isCompleted ? "Completed" : "Not Completed"}</span>
-      </div>
+    <div className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow p-4 flex flex-col">
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center space-x-3">
