@@ -84,7 +84,7 @@ export function PatientManager() {
 
   return (
     <div className="h-full w-full bg-gray-50">
-      <div className="max-w-7xl mx-auto p-6">
+      <div className="max-w-7xl mx-auto p-6 h-full flex flex-col">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
@@ -101,13 +101,15 @@ export function PatientManager() {
         </div>
 
         {/* Patient Grid */}
-        <PaginatedPatientGrid
-          patients={patients}
-          onView={handleView}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          isDeleting={isDeleting}
-        />
+        <div className="flex-1">
+          <PaginatedPatientGrid
+            patients={patients}
+            onView={handleView}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            isDeleting={isDeleting}
+          />
+        </div>
       </div>
     </div>
   );

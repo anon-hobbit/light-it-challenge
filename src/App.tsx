@@ -5,7 +5,11 @@ import { AppDrawerContainer } from "./components/AppDrawerContainer";
 import { PatientManager } from "./components/PatientManager";
 
 function AppContent() {
-  return <PatientManager />;
+  return (
+    <div className="h-full">
+      <PatientManager />
+    </div>
+  );
 }
 
 function App() {

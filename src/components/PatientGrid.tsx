@@ -35,15 +35,20 @@ export function PatientGrid({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {patients.map((patient) => (
-        <PatientCard
+      {patients.map((patient, index) => (
+        <div
           key={patient.id}
-          patient={patient}
-          onView={onView}
-          onEdit={onEdit}
-          onDelete={onDelete}
-          isDeleting={isDeleting}
-        />
+          className="fade-in"
+          style={{ "--delay": `${index * 0.1}s` } as React.CSSProperties}
+        >
+          <PatientCard
+            patient={patient}
+            onView={onView}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            isDeleting={isDeleting}
+          />
+        </div>
       ))}
     </div>
   );

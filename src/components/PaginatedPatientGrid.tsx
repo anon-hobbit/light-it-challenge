@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react';
-import { PatientGrid } from './PatientGrid';
-import { Pagination } from './ui';
-import type { Patient } from '../types';
+import { useState, useMemo } from "react";
+import { PatientGrid } from "./PatientGrid";
+import { Pagination } from "./ui";
+import type { Patient } from "../types";
 
 interface PaginatedPatientGridProps {
   patients: Patient[];
@@ -37,7 +37,7 @@ export function PaginatedPatientGrid({
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     // Scroll to top when page changes
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // Reset to page 1 when patients array changes significantly
@@ -49,15 +49,17 @@ export function PaginatedPatientGrid({
   }, [patients.length, itemsPerPage, currentPage]);
 
   return (
-    <div className="space-y-6">
-      <PatientGrid
-        patients={paginatedPatients}
-        onView={onView}
-        onEdit={onEdit}
-        onDelete={onDelete}
-        isDeleting={isDeleting}
-      />
-      
+    <div className="h-full flex flex-col gap-3">
+      <div className="h-full grow">
+        <PatientGrid
+          patients={paginatedPatients}
+          onView={onView}
+          onEdit={onEdit}
+          onDelete={onDelete}
+          isDeleting={isDeleting}
+        />
+      </div>
+
       {patients.length > 0 && (
         <Pagination
           currentPage={currentPage}
