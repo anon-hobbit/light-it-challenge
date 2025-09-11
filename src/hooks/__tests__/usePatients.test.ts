@@ -124,7 +124,9 @@ describe('usePatients', () => {
 
     await result.current.createPatient({
       name: newPatient.name,
-      description: newPatient.description
+      description: newPatient.description,
+      updatedAt: new Date().toISOString(),
+      isDeleted: false
     })
 
     await waitFor(() => {
@@ -174,12 +176,12 @@ describe('usePatients', () => {
     
     mockedFetchPatients.mockResolvedValue({
       data: mockPatients,
-      error: null
+      error: undefined
     })
 
     mockedDeletePatient.mockResolvedValue({
-      data: true,
-      error: null
+      data: '1',
+      error: undefined
     })
 
     const wrapper = createWrapper()
@@ -203,7 +205,7 @@ describe('usePatients', () => {
     const mockedFetchPatients = vi.mocked(patientsApi.fetchPatients)
     mockedFetchPatients.mockResolvedValue({
       data: [],
-      error: null
+      error: undefined
     })
 
     const wrapper = createWrapper()

@@ -15,7 +15,8 @@ const mockPatients = [
     name: 'John Doe',
     description: 'Test patient',
     createdAt: '2024-01-01T00:00:00.000Z',
-    updatedAt: null,
+    updatedAt: '2024-01-15T00:00:00.000Z',
+    isDeleted: false,
     bloodType: 'A+',
     birthDate: '1990-01-01',
     insuranceNumber: '12345',
@@ -45,7 +46,7 @@ describe('PatientManager Integration', () => {
     const mockedFetchPatients = vi.mocked(patientsApi.fetchPatients)
     mockedFetchPatients.mockResolvedValue({
       data: mockPatients,
-      error: null
+      error: undefined
     })
 
     render(
@@ -67,7 +68,7 @@ describe('PatientManager Integration', () => {
     const mockedFetchPatients = vi.mocked(patientsApi.fetchPatients)
     mockedFetchPatients.mockResolvedValue({
       data: [],
-      error: null
+      error: undefined
     })
 
     render(
@@ -86,7 +87,7 @@ describe('PatientManager Integration', () => {
   it('handles API errors gracefully', async () => {
     const mockedFetchPatients = vi.mocked(patientsApi.fetchPatients)
     mockedFetchPatients.mockResolvedValue({
-      data: null,
+      data: undefined,
       error: 'Failed to fetch patients'
     })
 
