@@ -3,7 +3,7 @@ import { vi } from 'vitest'
 import React from 'react'
 
 // Mock the ResizeObserver which is used by some UI components
-global.ResizeObserver = class ResizeObserver {
+globalThis.ResizeObserver = class ResizeObserver {
   observe() {}
   unobserve() {}
   disconnect() {}
@@ -25,4 +25,4 @@ Object.defineProperty(window, 'matchMedia', {
 })
 
 // Make React available globally for JSX
-global.React = React
+globalThis.React = React

@@ -4,11 +4,11 @@ import type { Patient } from '../../../types'
 
 // Mock fetch globally
 const mockFetch = vi.fn()
-global.fetch = mockFetch
+globalThis.fetch = mockFetch
 
 // Mock crypto.randomUUID
 const mockRandomUUID = vi.fn()
-Object.defineProperty(global, 'crypto', {
+Object.defineProperty(globalThis, 'crypto', {
   value: { randomUUID: mockRandomUUID }
 })
 
