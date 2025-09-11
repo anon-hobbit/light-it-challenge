@@ -24,7 +24,7 @@ export function PatientCard({
   return (
     <div className="relative bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow p-4 flex flex-col">
       <div
-        className={`flex items-center gap-1 absolute top-1 right-1 text-xs leading-0 p-1 rounded-3xl text-white ${isCompleted ? "bg-green-500" : "bg-red-500"}`}
+        className={`flex items-center gap-1 absolute top-1 right-1 text-xs leading-0 p-1 rounded-3xl text-white ${isCompleted ? "bg-green-400" : "bg-red-400"}`}
       >
         {isCompleted ? (
           <CheckCircle className="w-2.5 h-2.5" />
